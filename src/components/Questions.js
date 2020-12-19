@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import styled from 'styled-components';
 import { questions } from '../constants/questions'
+import { Radio, RadioGroup, Stack } from "@chakra-ui/react"
 
 const Divider = styled.div`
   height: 2px;
@@ -13,9 +14,9 @@ const Answers = styled.ul`
   list-style: none;
   padding : 0;
 
-  li {
+  div > div {
     display: grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: auto;
     align-items: center;
 
     &:hover {
@@ -28,17 +29,7 @@ const Answers = styled.ul`
     }
   }
 `
-
-const Questions = ({ currentQuestion, getAnswerValue, currentValue }) => {
-
-  useEffect(() => {
-    const po = document.getElementsByTagName('input').checked 
-    console.log(po)
-  }, [currentQuestion])
-
-  const onSiteChanged = (e, answer) => {
-    getAnswerValue(e.target.value, answer)
-  }
+const Questions = ({ currentQuestion, currentValues, setValue }) => {
 
   return (
     <>
@@ -46,17 +37,18 @@ const Questions = ({ currentQuestion, getAnswerValue, currentValue }) => {
 
       <Divider />
 
-      <Answers>
-      {questions[currentQuestion].answers.map(answer => (
-        <li key={answer.id}>
-          <input type="radio" id={answer.id} name="gender" value={currentValue} onChange={(e) => onSiteChanged(e, questions[currentQuestion])} />
-          <label htmlFor={answer.id}>{answer.answer}</label>
-        </li>
-      ))}
+        <Answers>
+          <RadioGroup onChange={setValue} value={currentValues[currentQuestion]}>
+          {questions[currentQuestion].answers.map(answer => (
+            <Stack direction="row" key={answer.id}>
+              <Radio value={answer.answer}>{answer.answer}</Radio>
+            </Stack>
+          ))}
+        </RadioGroup>
       </Answers>
 
       <Divider />
-    
+
     </>
   );
 }
